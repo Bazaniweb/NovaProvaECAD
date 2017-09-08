@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>     
+        <title>Facelet Title</title>               
+        <script type="text/javascript">
+            //Para o input receber apenas campos numericos
+            function somenteNumeros(num) {
+                var er = /[^0-9.]/;
+                er.lastIndex = 0;
+                var campo = num;
+                if (er.test(campo.value)) {
+                  campo.value = "";
+                }
+            }
+            
+        </script>
+    </h:head>
+    <h:body>
+        <h:form id="dadosFuncionario">
+            <fieldset style="width: 350px">
+                <legend>Novo Funcionário</legend>
+                <h:commandButton value="Novo" action="#{funcionarioBean.novo}" /> (Apaga o formulário abaixo)
+            </fieldset>
+            <fieldset style="width: 350px">
+                <legend>Dados do Funcionário</legend>
+                <h:panelGrid columns="4">
+                    <h:outputText value="Nome*" />
+                    <h:inputText value="#{funcionarioBean.funcionario.nome}" id="nome" />
+                    <h:outputText value="Sobrenome*" />
+                    <h:inputText value="#{funcionarioBean.funcionario.sobrenome}" id="sobrenome" />
+                    <h:outputText value="CPF*" />
+                    <h:inputText value="#{funcionarioBean.funcionario.cpf}" id="cpf" />
+                    <h:outputText value="Idade" />
+                    <h:inputText value="#{funcionarioBean.funcionario.idade}" id="idade" onkeyup="somenteNumeros(this);" maxlength="2" />
+                    <h:outputText value="Função*" />
+                    <h:inputText value="#{funcionarioBean.funcionario.funcao}" id="funcao" />
+                    <h:commandButton value="Gravar" action="#{funcionarioBean.gravar}" />
+                    <h:commandButton value="Remover" action="#{funcionarioBean.remover}" rendered="#{funcionarioBean.funcionario.cpf > 0}" />
+                </h:panelGrid>
+            </fieldset>
+        </h:form>
+ 
+        <h:form>
+            <fieldset style="width: 700px">
+                <legend>Funcionarios</legend>
+                <h:dataTable value="#{funcionarioBean.funcionarios}" var="funcionario" border="1">
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="NOME" /></f:facet>
+                        <h:outputText value="#{funcionario.nome} " /> <h:outputText value="#{funcionario.sobrenome}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="CPF" /></f:facet>
+                        <h:outputText value="#{funcionario.cpf}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="IDADE" /></f:facet>
+                        <h:outputText value="#{funcionario.idade}" />
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header"><h:outputText value="FUNCAO" /></f:facet>
+                        <h:outputText value="#{funcionario.funcao}" />
+                    </h:column>
+                    
+                    <h:column>
+                        <h:commandButton value="Selecionar" actionListener="#{funcionarioBean.selecionar}">
+                            <f:attribute name="cpf" value="#{funcionario.cpf}" />
+                            <f:ajax render=":dadosFuncionario" execute="@this" />
+                        </h:commandButton>
+                    </h:column>
+                </h:dataTable>
+            </fieldset>
+        </h:form>
+    </h:body>
+</html>
